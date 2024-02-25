@@ -129,6 +129,8 @@ $(document).ready(() => {
       $('.output-field').text("");
       // reset counter of characters
       $('.counter').text('0');
+      // reset field height
+      engTextArea.css('height', 'auto');
       // put focus on text field
       engTextArea.focus();
       // hide text field clear button

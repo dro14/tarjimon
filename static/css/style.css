@@ -11,7 +11,7 @@ html {
 
     /*translator body*/
     .translator-body {
-        margin-top: 9rem;
+        margin-top: 7rem;
         border-radius: 5px;
     }
 
@@ -77,7 +77,7 @@ html {
 
     /*translate body*/
     .translator-body {
-        margin-top: 15rem;
+        margin-top: 10rem;
         border-radius: 0;
     }
 
@@ -131,6 +131,7 @@ body {
 }
 
 .nav-btn {
+    font-size: .9rem;
     font-weight: 500;
     color: #006C80;
     text-transform: uppercase;
@@ -142,12 +143,17 @@ body {
     color: #006C80;
 }
 
+.nav-btn:active {
+    opacity: 0.3;
+    color: #006C80;
+}
+
 .logo-img {
-    height: 6rem;
+    height: 4rem;
 }
 
 .logo-text {
-    font-size: 6rem;
+    font-size: 1.2rem;
     color: #006C80;
     text-transform: uppercase;
 }
@@ -156,7 +162,7 @@ body {
 #announcement-banner {
     background-color: #006C80;
     color: #ffffff;
-    padding: .4rem;
+    padding: .2rem;
     text-align: center;
     width: 100%;
 
@@ -210,11 +216,12 @@ body {
     height: 3.5rem;
     padding: .5rem;
     border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    overflow: inherit;
 }
 
 /*field header button*/
 .field-header-btn {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
     color: #006C80;
     border: none;
@@ -241,14 +248,12 @@ body {
 }
 
 .text-field-cleaner-btn-wrapper {
-    padding: 1.5rem;
+    padding: 1rem;
     display: none;
 }
 
 .text-field-cleaner-btn {
-    font-size: 1.5rem;
     font-weight: 300;
-    padding: .1rem .8rem;
     border: none;
     border-radius: 50%;
     background-color: transparent;
@@ -320,7 +325,7 @@ div[contenteditable="true"]::before{
 }
 
 .translate-btn {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 500;
     opacity: 0.6;
 
