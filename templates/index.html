@@ -1,0 +1,35 @@
+<!--INCLUDE HEADER-->
+{% include  "partials/header.html" %}
+        <!--Translate Body-->
+        <div class="container translator-body">
+            <div class="row">
+                <div class="col-md-6 eng-text-field-container">
+                    <div class="field-header eng-text-field-header">
+                        <button class="field-header-btn field-header-btn-eng">Ingilizcha</button>
+                    </div>
+                    <div class="field-box eng-text-field-box">
+                        <div class="eng-text-field-wrapper">
+                            <div class="eng-text-field" id="text-field" placeholder="Yozing..." contenteditable="true"></div>
+                            <div class="text-field-cleaner-btn-wrapper">
+                                <button class="text-field-cleaner-btn">X</button>
+                            </div>
+                        </div>
+                        <p class="char-counter"><span class="counter">0</span> / ∞</p>
+                    </div>
+                </div>
+                <div class="col-md-6 output-field-container">
+                    <div class="field-header output-field-header">
+                        <button class="field-header-btn field-header-btn-output">O'zbekcha</button>
+                    </div>
+                    <div class="output-field-box">
+                        <p class="output-field">Javob</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Translate Button-->
+        <div class="container translate-btn-box">
+            <button class="translate-btn" disabled="disabled">Tarjima qiling</button>
+        </div>
+<!--INCLUDE FOOTER-->
+{% include  "partials/footer.html" %}
