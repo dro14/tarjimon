@@ -52,7 +52,7 @@ def contact():
 
 
 @app.route("/translate", methods=["POST"])
-def trans():
+def translate_endpoint():
     text_data = request.form["eng-field"]
     translated_text = translate(text_data)
     translation = Translation(uzb=text_data, eng=translated_text)
