@@ -9,6 +9,8 @@ EMBED_DIM = 256 * 2
 INTERMEDIATE_DIM = 2048 * 4
 NUM_HEADS = 8 * 2
 
+keras.mixed_precision.set_global_policy("mixed_float16")
+
 
 def get_model(filepath: str) -> keras.Model:
     # Encoder
