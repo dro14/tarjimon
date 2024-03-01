@@ -1,4 +1,6 @@
 from model import get_model, MAX_SEQUENCE_LENGTH
+from postprocess import postprocess
+from preprocess import preprocess
 from keras import ops
 import keras_nlp
 import json
@@ -26,9 +28,9 @@ model = get_model("model.weights.h5")
 
 def translate(input_sentence: str) -> str:
     batch_size = 1
-
-    # Tokenize the encoder input.
+    input_sentence = preprocess(input_sentence)
     encoder_input_tokens = eng_tokenizer([input_sentence])
+
     output = []
     for i in range(0, len(encoder_input_tokens[0]), MAX_SEQUENCE_LENGTH):
         input_tokens = encoder_input_tokens[:, i:i + MAX_SEQUENCE_LENGTH]
@@ -36,31 +38,24 @@ def translate(input_sentence: str) -> str:
             pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
             input_tokens = ops.concatenate([input_tokens, pads], 1)
 
-        # Define a function that outputs the next token's probability given the input sequence.
-        def next(prompt, cache, index):
+        def next_token(prompt, cache, index):
             logits = model([input_tokens.numpy(), prompt.numpy()])[:, index - 1, :]
-            # Ignore hidden states for now; only needed for contrastive search.
             hidden_states = None
             return logits, hidden_states, cache
 
-        # Build a prompt of length MAX_SEQUENCE_LENGTH with a start token and padding tokens.
         length = MAX_SEQUENCE_LENGTH
         start = ops.full((batch_size, 1), uzb_tokenizer.token_to_id("[START]"))
         pad = ops.full((batch_size, length - 1), uzb_tokenizer.token_to_id("[PAD]"))
-        prompt = ops.concatenate((start, pad), axis=-1)
 
         generated_tokens = keras_nlp.samplers.GreedySampler()(
-            next,
-            prompt,
+            next=next_token,
+            prompt=ops.concatenate((start, pad), axis=-1),
             end_token_id=uzb_tokenizer.token_to_id("[END]"),
-            index=1,  # Start sampling after start token.
+            index=1,
         )
         generated_sentences = uzb_tokenizer.detokenize(generated_tokens)
         translated = generated_sentences.numpy()[0].decode("utf-8")
-        translated = translated.replace("[START]", "")
-        translated = translated.replace("[END]", "")
-        translated = translated.replace("[PAD]", "")
-        translated = translated.strip()
+        translated = postprocess(translated)
         output.append(translated)
 
     return " ".join(output)
