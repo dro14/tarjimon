@@ -1,60 +1,68 @@
-import time
-import requests
-from bs4 import BeautifulSoup
-from urllib.parse import quote
-import logging
+from keras import ops
+import keras_nlp
+import keras
+import json
 
-RETRY_DELAY = 1  # adjust this as necessary
-RETRY_ATTEMPTS = 10  # adjust this as necessary
+MAX_SEQUENCE_LENGTH = 60
+
+with open("eng_vocab.json") as f:
+    data = json.loads(f.read())
+
+eng_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
+    vocabulary=data["model"]["vocab"],
+    merges=data["model"]["merges"],
+    add_prefix_space=True,
+)
+
+with open("uzb_vocab.json") as f:
+    data = json.loads(f.read())
+
+uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
+    vocabulary=data["model"]["vocab"],
+    merges=data["model"]["merges"],
+    add_prefix_space=True,
+)
+
+model = keras.models.load_model("model.keras")
 
 
-def chunk(s: str) -> list[str]:
-    completions = []
-    while len(s) > 5000:
-        cut_index = 0
-        for i in range(5000, -1, -1):
-            if s[i] in [' ', '\n', '\t', '\r']:
-                cut_index = i
-                break
-        completions.append(s[:cut_index])
-        s = s[cut_index:]
-    completions.append(s)
-    return completions
+def translate(input_sentence: str) -> str:
+    batch_size = 1
 
+    # Tokenize the encoder input.
+    encoder_input_tokens = eng_tokenizer([input_sentence])
+    output = []
+    for i in range(0, len(encoder_input_tokens[0]), MAX_SEQUENCE_LENGTH):
+        input_tokens = encoder_input_tokens[:, i:i + MAX_SEQUENCE_LENGTH]
+        if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
+            pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
+            input_tokens = ops.concatenate([input_tokens, pads], 1)
 
-def translate(q: str) -> str:
-    qs = chunk(q)  # splitting the string into a list of characters
+        # Define a function that outputs the next token's probability given the input sequence.
+        def next(prompt, cache, index):
+            logits = model([input_tokens.numpy(), prompt.numpy()])[:, index - 1, :]
+            # Ignore hidden states for now; only needed for contrastive search.
+            hidden_states = None
+            return logits, hidden_states, cache
 
-    i = 0
-    while i < len(qs):
-        retry_delay = RETRY_DELAY
-        attempts = 0
+        # Build a prompt of length MAX_SEQUENCE_LENGTH with a start token and padding tokens.
+        length = MAX_SEQUENCE_LENGTH
+        start = ops.full((batch_size, 1), uzb_tokenizer.token_to_id("[START]"))
+        pad = ops.full((batch_size, length - 1), uzb_tokenizer.token_to_id("[PAD]"))
+        prompt = ops.concatenate((start, pad), axis=-1)
 
-        while True:
-            attempts += 1
-            try:
-                resp = requests.get(f"https://translate.google.com/m?sl=en&tl=uz&q={quote(qs[i])}")
-            except Exception as e:
-                logging.error(f"Can't do request: {e}")
-                return " ".join(qs)
-            if resp.status_code != 200:
-                logging.error(f"Bad status: {resp.status_code}")
-                if attempts < RETRY_ATTEMPTS:
-                    time.sleep(retry_delay)
-                    retry_delay *= 2
-                    continue
-                else:
-                    return " ".join(qs)
+        generated_tokens = keras_nlp.samplers.GreedySampler()(
+            next,
+            prompt,
+            end_token_id=uzb_tokenizer.token_to_id("[END]"),
+            index=1,  # Start sampling after start token.
+        )
+        generated_sentences = uzb_tokenizer.detokenize(generated_tokens)
+        translated = generated_sentences.numpy()[0].decode("utf-8")
+        translated = translated.replace("[START]", "")
+        translated = translated.replace("[END]", "")
+        translated = translated.replace("[PAD]", "")
+        translated = translated.strip()
+        output.append(translated)
 
-            soup = BeautifulSoup(resp.text, 'html.parser')
-            result_container = soup.find('div', {'class': 'result-container'})
-
-            if result_container is None:
-                logging.error("Not found")
-                return " ".join(qs)
-
-            qs[i] = result_container.text
-
-            break  # break the while loop if the request is successful and result is found
-        i += 1
-    return " ".join(qs)
+    return " ".join(output)
