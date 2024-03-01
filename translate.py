@@ -1,3 +1,4 @@
+from keras_nlp import layers
 from keras import ops
 import keras_nlp
 import keras
@@ -23,7 +24,14 @@ uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
     add_prefix_space=True,
 )
 
-model = keras.models.load_model("model.keras")
+model = keras.models.load_model(
+    "model.keras",
+    custom_objects={
+        "TokenAndPositionEmbedding": layers.TokenAndPositionEmbedding,
+        "TransformerEncoder": layers.TransformerEncoder,
+        "TransformerDecoder": layers.TransformerDecoder,
+    },
+)
 
 
 def translate(input_sentence: str) -> str:
