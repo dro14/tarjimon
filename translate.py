@@ -1,10 +1,7 @@
-from keras_nlp import layers
+from model import get_model, MAX_SEQUENCE_LENGTH
 from keras import ops
 import keras_nlp
-import keras
 import json
-
-MAX_SEQUENCE_LENGTH = 60
 
 with open("eng_vocab.json") as f:
     data = json.loads(f.read())
@@ -24,14 +21,7 @@ uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
     add_prefix_space=True,
 )
 
-model = keras.models.load_model(
-    "model.keras",
-    custom_objects={
-        "TokenAndPositionEmbedding": layers.TokenAndPositionEmbedding,
-        "TransformerEncoder": layers.TransformerEncoder,
-        "TransformerDecoder": layers.TransformerDecoder,
-    },
-)
+model = get_model("model.weights.h5")
 
 
 def translate(input_sentence: str) -> str:
