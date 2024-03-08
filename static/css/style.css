@@ -336,6 +336,14 @@ div[contenteditable="true"]::before{
     padding: 0.5rem 1rem;
 }
 
+.hide-loader {
+    display: flex;
+    justify-content: center;
+    min-height: 20rem;
+    align-items: center;
+    z-index: -2;
+}
+
 /*ABOUT-----------------------------------------------------------------*/
 
 

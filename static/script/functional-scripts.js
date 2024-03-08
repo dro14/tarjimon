@@ -2,6 +2,8 @@ $(document).ready(() => {
   let engTextArea = $('#text-field');
   let translateBtn = $('.translate-btn');
   let clearBtn = $('.text-field-cleaner-btn-wrapper');
+  let loader = $('.hide-loader');
+  let outputField = $('.output-field');
 
   // Auto Font Size
   engTextArea.on('input paste', function() {
@@ -93,6 +95,11 @@ $(document).ready(() => {
 
   // Translate
   translateBtn.on('click', function() {
+    // hide output field
+    outputField.css('display', 'none');
+    // show loader
+    loader.css('display', 'flex');
+
     if (engTextArea.text().trim() !== '') {
       // get data
       let textData = engTextArea.text().trim();
@@ -108,8 +115,12 @@ $(document).ready(() => {
       })
           .then(response => response.text())
           .then(data => {
+            // hide loader
+            loader.css('display', 'none');
+            // show output field
+            outputField.css('display', 'inline-block');
             // use the data from the server
-            $('.output-field').text(data);
+            outputField.text(data);
           })
           .catch(error => {
             console.log(`Error happened in fetch('/translate')... ${error}`);
@@ -126,7 +137,7 @@ $(document).ready(() => {
       // clear text field
       engTextArea.text("");
       // clear output field
-      $('.output-field').text("");
+      outputField.text("");
       // reset counter of characters
       $('.counter').text('0');
       // reset field height
