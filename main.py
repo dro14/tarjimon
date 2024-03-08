@@ -36,6 +36,7 @@ class Translation(db.Model):
     input_time: Mapped[str] = mapped_column(String, nullable=False)
     output_time: Mapped[str] = mapped_column(String, nullable=False)
     duration: Mapped[str] = mapped_column(Float, nullable=False)
+    ip_address: Mapped[str] = mapped_column(String, nullable=False)
     browser_family: Mapped[str] = mapped_column(String, nullable=False)
     browser_version: Mapped[str] = mapped_column(String, nullable=False)
     device_family: Mapped[str] = mapped_column(String, nullable=False)
@@ -142,6 +143,9 @@ def translate_endpoint():
     client_os_fam = client_os_data[0] if client_os_data[0] != -1 else str(-1)
     client_os_ver = client_os_data[1] if client_os_data[1] != -1 else str(-1)
 
+    # ## get ip address
+    client_ip_address = request.remote_addr
+
     # ## get input & output time and duration
     t_before = time.time()
     d_date, input_start = localize_date()
@@ -162,6 +166,7 @@ def translate_endpoint():
         input_time=input_start,
         output_time=output_end,
         duration=duration,
+        ip_address=client_ip_address,
         browser_family=client_br_fam,
         browser_version=client_br_ver,
         device_family=client_dv_fam,
