@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote
 import logging
 
-RETRY_DELAY = 1  # adjust this as necessary
-RETRY_ATTEMPTS = 10  # adjust this as necessary
+RETRY_DELAY = 1
+RETRY_ATTEMPTS = 10
 
 
 def chunk(s: str) -> list[str]:
@@ -23,7 +23,7 @@ def chunk(s: str) -> list[str]:
 
 
 def translate(q: str) -> str:
-    qs = chunk(q)  # splitting the string into a list of characters
+    qs = chunk(q)
 
     i = 0
     while i < len(qs):
@@ -55,6 +55,6 @@ def translate(q: str) -> str:
 
             qs[i] = result_container.text
 
-            break  # break the while loop if the request is successful and result is found
+            break
         i += 1
     return " ".join(qs)

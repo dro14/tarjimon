@@ -1,5 +1,5 @@
+from tensorlfow import keras
 import keras_nlp
-import keras
 
 MAX_SEQUENCE_LENGTH = 60
 ENG_VOCAB_SIZE = 30_000

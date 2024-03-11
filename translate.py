@@ -1,7 +1,7 @@
 from model import get_model, MAX_SEQUENCE_LENGTH
 from postprocess import postprocess
 from preprocess import preprocess
-from keras import ops
+from tensorflow.keras import ops
 import keras_nlp
 import json
 
