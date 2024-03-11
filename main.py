@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String, Integer, Float
 from translate import translate
-# from google import translate  # for Yusuf for local run
+# from google_translate import translate  # for Yusuf for local run
 from datetime import datetime as dt
 from pytz import timezone
 from user_agents import parse
