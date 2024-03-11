@@ -17,5 +17,7 @@ requests==2.31.0
 soupsieve==2.5
 SQLAlchemy==2.0.28
 typing_extensions==4.10.0
+ua-parser==0.18.0
 urllib3==2.2.1
+user-agents==2.2.0
 Werkzeug==3.0.1
