@@ -1,4 +1,4 @@
-from tensorlfow import keras
+from tensorflow import keras
 import keras_nlp
 
 MAX_SEQUENCE_LENGTH = 60
