@@ -26,14 +26,14 @@ uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
 model = get_model("model.weights.h5")
 
 
-def translate(input_sentence: str) -> str:
+def translate(s: str) -> str:
     batch_size = 1
-    input_sentence = preprocess(input_sentence)
-    encoder_input_tokens = eng_tokenizer([input_sentence])
+    input_sentences = preprocess(s)
+    encoder_input_tokens = eng_tokenizer(input_sentences)
 
     output = []
-    for i in range(0, len(encoder_input_tokens[0]), MAX_SEQUENCE_LENGTH):
-        input_tokens = encoder_input_tokens[:, i:i + MAX_SEQUENCE_LENGTH]
+    for i in range(len(encoder_input_tokens)):
+        input_tokens = encoder_input_tokens[i:i + 1, :MAX_SEQUENCE_LENGTH]
         if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
             pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
             input_tokens = ops.concatenate([input_tokens, pads], 1)
