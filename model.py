@@ -2,14 +2,12 @@ import keras_nlp
 import keras
 
 MAX_SEQUENCE_LENGTH = 60
-ENG_VOCAB_SIZE = 30_000
-UZB_VOCAB_SIZE = 30_000
+ENG_VOCAB_SIZE = 15_000 * 3
+UZB_VOCAB_SIZE = 15_000 * 3
 
-EMBED_DIM = 256 * 2
-INTERMEDIATE_DIM = 2048 * 4
-NUM_HEADS = 8 * 2
-
-keras.mixed_precision.set_global_policy("mixed_float16")
+EMBED_DIM = 256 * 3
+INTERMEDIATE_DIM = 2048 * 8
+NUM_HEADS = 8 * 3
 
 
 def get_model(filepath: str) -> keras.Model:
@@ -55,7 +53,7 @@ def get_model(filepath: str) -> keras.Model:
     model = keras.Model(
         [encoder_inputs, decoder_inputs],
         decoder_outputs,
-        name="transformer",
+        name="tarjimon",
     )
     model.load_weights(filepath)
     return model

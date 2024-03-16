@@ -23,19 +23,18 @@ uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
     add_prefix_space=True,
 )
 
-model = get_model("model.weights.h5")
+model = get_model("tarjimon.weights.h5")
 
 
 def translate(s: str) -> str:
-    batch_size = 1
     input_sentences = preprocess(s)
     encoder_input_tokens = eng_tokenizer(input_sentences)
 
     output = []
     for i in range(encoder_input_tokens.shape[0]):
         input_tokens = encoder_input_tokens[i:i + 1, :MAX_SEQUENCE_LENGTH]
-        if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
-            pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
+        if input_tokens.shape[1] < MAX_SEQUENCE_LENGTH:
+            pads = ops.full((1, MAX_SEQUENCE_LENGTH - input_tokens.shape[1], 0))
             input_tokens = ops.concatenate([input_tokens, pads], 1)
 
         def next_token(prompt, cache, index):
@@ -44,8 +43,8 @@ def translate(s: str) -> str:
             return logits, hidden_states, cache
 
         length = MAX_SEQUENCE_LENGTH
-        start = ops.full((batch_size, 1), uzb_tokenizer.token_to_id("[START]"))
-        pad = ops.full((batch_size, length - 1), uzb_tokenizer.token_to_id("[PAD]"))
+        start = ops.full((1, 1), uzb_tokenizer.token_to_id("[START]"))
+        pad = ops.full((1, length - 1), uzb_tokenizer.token_to_id("[PAD]"))
 
         generated_tokens = keras_nlp.samplers.GreedySampler()(
             next=next_token,
