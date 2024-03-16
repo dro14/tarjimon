@@ -32,7 +32,7 @@ def translate(s: str) -> str:
     encoder_input_tokens = eng_tokenizer(input_sentences)
 
     output = []
-    for i in range(len(encoder_input_tokens)):
+    for i in range(encoder_input_tokens.shape[0]):
         input_tokens = encoder_input_tokens[i:i + 1, :MAX_SEQUENCE_LENGTH]
         if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
             pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
