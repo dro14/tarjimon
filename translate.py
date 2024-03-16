@@ -33,8 +33,8 @@ def translate(s: str) -> str:
     output = []
     for i in range(encoder_input_tokens.shape[0]):
         input_tokens = encoder_input_tokens[i:i + 1, :MAX_SEQUENCE_LENGTH]
-        if input_tokens.shape[1] < MAX_SEQUENCE_LENGTH:
-            pads = ops.full((1, MAX_SEQUENCE_LENGTH - input_tokens.shape[1], 0))
+        if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
+            pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0]), 0))
             input_tokens = ops.concatenate([input_tokens, pads], 1)
 
         def next_token(prompt, cache, index):
