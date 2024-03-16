@@ -34,7 +34,7 @@ def translate(s: str) -> str:
     for i in range(encoder_input_tokens.shape[0]):
         input_tokens = encoder_input_tokens[i:i + 1, :MAX_SEQUENCE_LENGTH]
         if len(input_tokens[0]) < MAX_SEQUENCE_LENGTH:
-            pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0]), 0))
+            pads = ops.full((1, MAX_SEQUENCE_LENGTH - len(input_tokens[0])), 0)
             input_tokens = ops.concatenate([input_tokens, pads], 1)
 
         def next_token(prompt, cache, index):
@@ -43,13 +43,13 @@ def translate(s: str) -> str:
             return logits, hidden_states, cache
 
         length = MAX_SEQUENCE_LENGTH
-        start = ops.full((1, 1), uzb_tokenizer.token_to_id("[START]"))
-        pad = ops.full((1, length - 1), uzb_tokenizer.token_to_id("[PAD]"))
+        start = ops.full((1, 1), 2)
+        pad = ops.full((1, length - 1), 0)
 
         generated_tokens = keras_nlp.samplers.GreedySampler()(
             next=next_token,
             prompt=ops.concatenate((start, pad), axis=-1),
-            end_token_id=uzb_tokenizer.token_to_id("[END]"),
+            end_token_id=3,
             index=1,
         )
         generated_sentences = uzb_tokenizer.detokenize(generated_tokens)
