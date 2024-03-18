@@ -23,7 +23,7 @@ uzb_tokenizer = keras_nlp.tokenizers.BytePairTokenizer(
     add_prefix_space=True,
 )
 
-model = get_model("tarjimon.weights.h5")
+model = get_model("model.weights.h5")
 
 
 def translate(s: str) -> str:
@@ -42,9 +42,8 @@ def translate(s: str) -> str:
             hidden_states = None
             return logits, hidden_states, cache
 
-        length = MAX_SEQUENCE_LENGTH
         start = ops.full((1, 1), 2)
-        pad = ops.full((1, length - 1), 0)
+        pad = ops.full((1, MAX_SEQUENCE_LENGTH - 1), 0)
 
         generated_tokens = keras_nlp.samplers.GreedySampler()(
             next=next_token,

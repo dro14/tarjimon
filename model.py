@@ -6,7 +6,7 @@ ENG_VOCAB_SIZE = 15_000 * 3
 UZB_VOCAB_SIZE = 15_000 * 3
 
 EMBED_DIM = 256 * 3
-INTERMEDIATE_DIM = 2048 * 8
+INTERMEDIATE_DIM = 2048 * 2**3
 NUM_HEADS = 8 * 3
 
 
@@ -44,16 +44,9 @@ def get_model(filepath: str) -> keras.Model:
     x = keras.layers.Dropout(0.5)(x)
     decoder_outputs = keras.layers.Dense(UZB_VOCAB_SIZE, activation="softmax")(x)
 
-    decoder = keras.Model(
-        [decoder_inputs, encoded_seq_inputs],
-        decoder_outputs,
-    )
+    decoder = keras.Model([decoder_inputs, encoded_seq_inputs], decoder_outputs)
     decoder_outputs = decoder([decoder_inputs, encoder_outputs])
 
-    model = keras.Model(
-        [encoder_inputs, decoder_inputs],
-        decoder_outputs,
-        name="tarjimon",
-    )
+    model = keras.Model([encoder_inputs, decoder_inputs], decoder_outputs)
     model.load_weights(filepath)
     return model
