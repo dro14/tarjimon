@@ -30,6 +30,7 @@ model = get_model("model.weights.h5")
 
 
 def translate(s: str) -> str:
+    print(s)
     placeholders = {"<url>": [], "<email>": []}
 
     strings = extractor.find_urls(s, check_dns=True)
@@ -52,6 +53,7 @@ def translate(s: str) -> str:
         s = s.replace(string, "<hashtag>", 1)
 
     input_sentences = preprocess(s)
+    print(input_sentences)
     encoder_input_tokens = eng_tokenizer(input_sentences)
 
     outputs = []
@@ -81,12 +83,9 @@ def translate(s: str) -> str:
         outputs.append(translated)
 
     s = " ".join(outputs)
-    for url in placeholders["<url>"]:
-        s = s.replace("<url>", url, 1)
-    for email in placeholders["<email>"]:
-        s = s.replace("<email>", email, 1)
-    for username in placeholders["<username>"]:
-        s = s.replace("<username>", username, 1)
-    for hashtag in placeholders["<hashtag>"]:
-        s = s.replace("<hashtag>", hashtag, 1)
+    print(s)
+    print(placeholders)
+    for placeholder in ["<url>", "<email>", "<username>", "<hashtag>"]:
+        for string in placeholders[placeholder]:
+            s = s.replace(placeholder, string, 1)
     return s
