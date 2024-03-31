@@ -30,15 +30,15 @@ model = get_model("model.weights.h5")
 
 
 def translate(s: str) -> str:
-    placeholders = {}
+    placeholders = {"<url>": [], "<email>": []}
 
     strings = extractor.find_urls(s, check_dns=True)
     for string in strings:
         if "@" in string and "/" not in string:
-            placeholders.get("<email>", []).append(string)
+            placeholders["<url>"].append(string)
             s = s.replace(string, "<email>", 1)
         elif not string.startswith("pic.twitter.com/"):
-            placeholders.get("<url>", []).append(string)
+            placeholders["<email>"].append(string)
             s = s.replace(string, "<url>", 1)
 
     strings = re.findall(r"@[A-Za-z]+[A-Za-z_\-0-9]*|@[0-9]+[A-Za-z_\-][A-Za-z_\-0-9]*", s)
@@ -81,7 +81,12 @@ def translate(s: str) -> str:
         outputs.append(translated)
 
     s = " ".join(outputs)
-    for k, v in placeholders.items():
-        for string in v:
-            s = s.replace(k, string, 1)
+    for url in placeholders["<url>"]:
+        s = s.replace("<url>", url, 1)
+    for email in placeholders["<email>"]:
+        s = s.replace("<email>", email, 1)
+    for username in placeholders["<username>"]:
+        s = s.replace("<username>", username, 1)
+    for hashtag in placeholders["<hashtag>"]:
+        s = s.replace("<hashtag>", hashtag, 1)
     return s
