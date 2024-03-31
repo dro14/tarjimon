@@ -1,159 +1,213 @@
 import re
 
 replace_words = {
-    " G'": " Ǧ",
-    " g'": " ǧ",
-    " O'": " Õ",
-    " o'": " õ",
-    ".G' ": ".Ǧ ",
-    ".O' ": ".Õ ",
-    "G'.": "Ǧ.",
-    "O'.": "Õ.",
+    r"\bG'": "Ğ",
+    r"\bg'": "ğ",
+    r"\bO'": "Ŏ",
+    r"\bo'": "ŏ",
+    r".G'\b": ".Ğ",
+    r".O'\b": ".Ŏ",
+    r"G'.": "Ğ.",
+    r"O'.": "Ŏ.",
 
-    "Rõbaro'": "Rõbarõ",
-    "rõbaro'": "rõbarõ",
+    "Rŏbaro'": "Rŏbarŏ",
+    "rŏbaro'": "rŏbarŏ",
 
-    "Obro'": "Obrõ",
-    "obro'": "obrõ",
+    "Rŏparo'": "Rŏparŏ",
+    "rŏparo'": "rŏparŏ",
 
-    "Beobro'": "Beobrõ",
-    "beobro'": "beobrõ",
+    "Rubaro'": "Rubarŏ",
+    "rubaro'": "rubarŏ",
 
-    "Peshko'": "Peshkõ",
-    "Borshitao'": "Borshitaõ",
-    "Ebro'": "Ebrõ",
-    "RO'": "RÕ",
-    "TRO'": "TRÕ",
+    "Obro'": "Obrŏ",
+    "obro'": "obrŏ",
 
-    "Voy-bo'!": "Voy-bõ!",
+    "Beobro'": "Beobrŏ",
+    "beobro'": "beobrŏ",
 
-    "Õh-ho'!": "Õh-hõ!",
+    r"\bSo'": "Sŏ",
+    r"\bso'": "sŏ",
 
-    "Chog'": "Choǧ",
-    "chog'": "choǧ",
+    "Gulro'": "Gulrŏ",
+    "gulro'": "gulrŏ",
 
-    "Mablag'": "Mablaǧ",
-    "mablag'": "mablaǧ",
+    "Ijmo'": "Ijmŏ",
+    "ijmo'": "ijmŏ",
 
-    "Yarog'": "Yaroǧ",
-    "yarog'": "yaroǧ",
+    "Yo'": "Yŏ",
+    "yo'": "yŏ",
 
-    "Qutlug'": "Qutluǧ",
-    "qutlug'": "qutluǧ",
+    "Bio'": "Biŏ",
+    "bio'": "biŏ",
 
-    "Urug'": "Uruǧ",
-    "urug'": "uruǧ",
+    "Peshko'": "Peshkŏ",
+    "Borshitao'": "Borshitaŏ",
+    "Ebro'": "Ebrŏ",
+    "Qarnoqcho'": "Qarnoqchŏ",
+    "Eroglo'": "Eroglŏ",
+    "Beyneo'": "Beyneŏ",
+    "Toktao'": "Toktaŏ",
+    "Woy-Wo'": "Woy-Wŏ",
+    "Aqro'": "Aqrŏ",
 
-    "Bog'": "Boǧ",
-    "bog'": "boǧ",
-    "BOG'": "BOǦ",
+    "Voy-bo'!": "Voy-bŏ!",
+    "Ŏh-ho'!": "Ŏh-hŏ!",
+    "ŏx-xo'!": "ŏx-xŏ!",
+    "hŏo'": "hŏŏ",
+    "lil-amo'": "lil-amŏ",
+    "ŎTIBDO'": "ŎTIBDŎ",
 
-    "Tog'": "Toǧ",
-    "tog'": "toǧ",
+    "RO'": "RŎ",
+    "TRO'": "TRŎ",
+    "RAO'": "RAŎ",
+    "IFO'": "IFŎ",
 
-    "Yog'": "Yoǧ",
-    "yog'": "yoǧ",
+    "Chog'": "Choğ",
+    "chog'": "choğ",
 
-    "Sog'": "Soǧ",
-    "sog'": "soǧ",
+    "Mablag'": "Mablağ",
+    "mablag'": "mablağ",
 
-    "Dog'": "Doǧ",
-    "dog'": "doǧ",
+    "Yarog'": "Yaroğ",
+    "yarog'": "yaroğ",
 
-    "Yorug'": "Yoruǧ",
-    "yorug'": "yoruǧ",
+    "Qutlug'": "Qutluğ",
+    "qutlug'": "qutluğ",
 
-    "Ulug'": "Uluǧ",
-    "ulug'": "uluǧ",
+    "Urug'": "Uruğ",
+    "urug'": "uruğ",
 
-    "Yorog'": "Yoroǧ",
-    "yorog'": "yoroǧ",
+    "Bog'": "Boğ",
+    "bog'": "boğ",
+    "BOG'": "BOĞ",
 
-    "Yanglig'": "Yangliǧ",
-    "yanglig'": "yangliǧ",
+    "Tog'": "Toğ",
+    "tog'": "toğ",
 
-    "Chõg'": "Chõǧ",
-    "chõg'": "chõǧ",
+    "Yog'": "Yoğ",
+    "yog'": "yoğ",
 
-    "Tig'": "Tiǧ",
-    "tig'": "tiǧ",
+    "Sog'": "Soğ",
+    "sog'": "soğ",
 
-    "Forig'": "Foriǧ",
-    "forig'": "foriǧ",
+    "Dog'": "Doğ",
+    "dog'": "doğ",
 
-    "Bug'": "Buǧ",
-    "bug'": "buǧ",
+    "Yorug'": "Yoruğ",
+    "yorug'": "yoruğ",
 
-    "Jag'": "Jaǧ",
-    "jag'": "jaǧ",
+    "Ulug'": "Uluğ",
+    "ulug'": "uluğ",
 
-    "Dimog'": "Dimoǧ",
-    "dimog'": "dimoǧ",
+    "Yorog'": "Yoroğ",
+    "yorog'": "yoroğ",
 
-    "Dovrug'": "Dovruǧ",
-    "dovrug'": "dovruǧ",
+    "Yanglig'": "Yangliğ",
+    "yanglig'": "yangliğ",
 
-    "Yig'": "Yiǧ",
-    "yig'": "yiǧ",
+    "Chŏg'": "Chŏğ",
+    "chŏg'": "chŏğ",
 
-    "Zog'": "Zoǧ",
-    "zog'": "zoǧ",
+    "Tig'": "Tiğ",
+    "tig'": "tiğ",
 
-    "Darig'": "Dariǧ",
-    "darig'": "dariǧ",
+    "Forig'": "Foriğ",
+    "forig'": "foriğ",
 
-    "Rog'": "Roǧ",
-    "rog'": "roǧ",
+    "Bug'": "Buğ",
+    "bug'": "buğ",
 
-    "Tug'": "Tuǧ",
-    "tug'": "tuǧ",
+    "Jag'": "Jağ",
+    "jag'": "jağ",
 
-    "Arqadag'": "Arqadaǧ",
-    "arqadag'": "arqadaǧ",
-    "arkadag'": "arkadaǧ",
+    "Dimog'": "Dimoğ",
+    "dimog'": "dimoğ",
 
-    "Bõzdog'": "Bõzdoǧ",
-    "Qorabog'": "Qoraboǧ",
-    "Gulbog'": "Gulboǧ",
-    "Abdusamig'": "Abdusamiǧ",
-    "al-Marug'": "al-Maruǧ",
-    "Arkadag'": "Arkadaǧ",
-    "Semurg'": "Semurǧ",
-    "Qorabag'": "Qorabaǧ",
-    "Saneg'": "Saneǧ",
-    "Qilichdorõg'": "Qilichdorõǧ",
-    "Dushanbe-Kõlob-Xorõg'": "Dushanbe-Kõlob-Xorõǧ",
-    "Bõzdag'": "Bõzdaǧ",
-    "Õzdag'": "Õzdaǧ",
-    "Bertug'": "Bertuǧ",
-    "Yanardag'": "Yanardaǧ",
-    "Bozdag'": "Bozdaǧ",
-    "Tekirdag'": "Tekirdaǧ",
-    "Quǧlug'": "Quǧluǧ",
-    "Akchag'": "Akchaǧ",
-    "Oqchog'": "Oqchoǧ",
-    "Juzimbag'": "Juzimbaǧ",
-    "Xorug'": "Xoruǧ",
-    "Horug'": "Horuǧ",
-    "Poytug'": "Poytuǧ",
-    "Ertug'": "Ertuǧ",
+    "Dovrug'": "Dovruğ",
+    "dovrug'": "dovruğ",
+
+    "Yig'": "Yiğ",
+    "yig'": "yiğ",
+
+    "Zog'": "Zoğ",
+    "zog'": "zoğ",
+
+    "Darig'": "Dariğ",
+    "darig'": "dariğ",
+
+    "Rog'": "Roğ",
+    "rog'": "roğ",
+
+    "Tug'": "Tuğ",
+    "tug'": "tuğ",
+
+    "Otlig'": "Otliğ",
+    "otlig'": "otliğ",
+
+    "Semurg'": "Semurğ",
+    "semurg'": "semurğ",
+
+    "Qovug'": "Qovuğ",
+    "qovug'": "qovuğ",
+
+    "Kutlug'": "Kutluğ",
+    "kutlug'": "kutluğ",
+
+    "Hoqonlig'": "Hoqonliğ",
+    "hoqonlig'": "hoqonliğ",
+
+    "Arqadag'": "Arqadağ",
+    "arqadag'": "arqadağ",
+    "arkadag'": "arkadağ",
+
+    "Bŏzdog'": "Bŏzdoğ",
+    "Qorabog'": "Qoraboğ",
+    "Gulbog'": "Gulboğ",
+    "Abdusamig'": "Abdusamiğ",
+    "al-Marug'": "al-Maruğ",
+    "Arkadag'": "Arkadağ",
+    "Qorabag'": "Qorabağ",
+    "Saneg'": "Saneğ",
+    "Qilichdorŏg'": "Qilichdorŏğ",
+    "Dushanbe-Kŏlob-Xorŏg'": "Dushanbe-Kŏlob-Xorŏğ",
+    "Bŏzdag'": "Bŏzdağ",
+    "Ŏzdag'": "Ŏzdağ",
+    "Bertug'": "Bertuğ",
+    "Yanardag'": "Yanardağ",
+    "Bozdag'": "Bozdağ",
+    "Tekirdag'": "Tekirdağ",
+    "Quğlug'": "Quğluğ",
+    "Akchag'": "Akchağ",
+    "Oqchog'": "Oqchoğ",
+    "Juzimbag'": "Juzimbağ",
+    "Xorug'": "Xoruğ",
+    "Horug'": "Horuğ",
+    "Poytug'": "Poytuğ",
+    "Ertug'": "Ertuğ",
+    "Uludag'": "Uludağ",
+    "POYTUG'": "POYTUĞ",
+    "Elyazig'": "Elyaziğ",
+    "Vozig'": "Voziğ",
+    "Samandag'": "Samandağ",
+
+    "YoG'": "YoĞ",
 }
 
 
 def custom_replace(s: str) -> str:
-    s = s.replace("G'", "Ǧ")
-    s = s.replace("g'", "ǧ")
-    s = s.replace("O'", "Õ")
-    s = s.replace("o'", "õ")
-    match = re.search(r"[ǦǧÕõ]s?\W", s)
+    s = s.replace("G'", "Ğ")
+    s = s.replace("g'", "ğ")
+    s = s.replace("O'", "Ŏ")
+    s = s.replace("o'", "ŏ")
+    match = re.search(r"[ĞğŎŏ]s?\W", s)
     while match:
-        old = match.group(0)
-        new = old.replace("Ǧ", "G'")
-        new = new.replace("ǧ", "g'")
-        new = new.replace("Õ", "O'")
-        new = new.replace("õ", "o'")
+        old = match.group()
+        new = old.replace("Ğ", "G'")
+        new = new.replace("ğ", "g'")
+        new = new.replace("Ŏ", "O'")
+        new = new.replace("ŏ", "o'")
         s = s.replace(old, new)
-        match = re.search(r"[ǦǧÕõ]s?\W", s)
+        match = re.search(r"[ĞğŎŏ]s?\W", s)
     for old, new in replace_words.items():
-        s = s.replace(old, new)
+        s = re.sub(old, new, s)
     return s

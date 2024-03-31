@@ -2,12 +2,12 @@ import keras_nlp
 import keras
 
 MAX_SEQUENCE_LENGTH = 60
-ENG_VOCAB_SIZE = 15_000 * 3
-UZB_VOCAB_SIZE = 15_000 * 3
+ENG_VOCAB_SIZE = 15_000 * 4
+UZB_VOCAB_SIZE = 15_000 * 4
 
-EMBED_DIM = 256 * 3
-INTERMEDIATE_DIM = 2048 * 2**3
-NUM_HEADS = 8 * 3
+EMBED_DIM = 256 * 4
+INTERMEDIATE_DIM = 2048 * 2**4
+NUM_HEADS = 8 * 4
 
 
 def get_model(filepath: str) -> keras.Model:

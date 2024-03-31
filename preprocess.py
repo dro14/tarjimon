@@ -1,11 +1,12 @@
+from functions.quote_standardization import quote_standardization
 from functions.custom_replace import custom_replace
+from functions.sentence_split import sentence_split
 from functions.strip_replace import strip_replace
-import re
 
 
 def preprocess(s: str) -> list[str]:
-    s, invalid_chars = strip_replace(s)
-    sentences = re.split(r"(?<=[.!?;])\s+(?![.!?;a-z])", s)
-    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+    s = strip_replace(s)
+    sentences = sentence_split(s)
+    sentences = [quote_standardization(sentence) for sentence in sentences]
     sentences = [custom_replace(sentence) for sentence in sentences]
     return sentences
