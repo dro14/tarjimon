@@ -1,12 +1,18 @@
 import re
 
-quotes = [("«", "»"), ("“", "”"), ("(", ")"), ("[", "]"), ("{", "}")]
+quotes = (("«", "»"), ("(", ")"), ("[", "]"), ("{", "}"))
 
 
 def quote_standardization(s: str) -> str:
+    if "‟" in s:
+        s.replace("‟", '“')
     if "„" in s:
-        s = s.replace("“", '”')
-        s = s.replace("„", '“')
+        s = s.replace("„", "«")
+        s = s.replace("“", "»")
+    s = s.replace("❝", "«")
+    s = s.replace("❞", "»")
+    s = s.replace("“", "«")
+    s = s.replace("”", "»")
     for quote in quotes:
         if quote[0] not in s and quote[1] not in s:
             continue
@@ -19,26 +25,16 @@ def quote_standardization(s: str) -> str:
                 if stack:
                     stack.pop()
                 else:
-                    if s[0] != quote[0]:
-                        if match := re.match(r"\W+ ", s):
-                            s = s[len(match.group()):]
-                        s = quote[0] + s
-                        i += 1
-                    else:
-                        s = s[:i] + s[i + 1:]
-                        i -= 1
+                    s = s[:i] + s[i + 1:]
+                    i -= 1
             i += 1
         for i, index in enumerate(stack):
             s = s[:index - i] + s[index + 1 - i:]
-    if "“" in s:
-        s = s.replace("“", '"')
-    if "”" in s:
-        s = s.replace("”", '"')
+    s = s.replace("«", '"')
+    s = s.replace("»", '"')
+    s = re.sub(r"(?<=[A-Za-z])''(?=[A-Za-z])", "'", s)
+    s = s.replace("''", '"')
     if s.count('"') % 2 != 0:
-        if s[0] == '"':
-            s = s + '"'
-        else:
-            if match := re.match(r"\W+ ", s):
-                s = s[len(match.group()):]
-            s = '"' + s
+        s = s.replace('"', "")
+    s = re.sub(r"  +", " ", s.strip())
     return s

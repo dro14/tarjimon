@@ -1,39 +1,31 @@
-import re
+import regex as re
 
-special = re.compile(
-    r"(Mr|Mrs|Ms|Dr|Prof|Rev|St|Ave|Ltd|Inc|Co|Corp|Jr|Sr|Mt|Ft|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\.$"
+special_cases = re.compile(
+    r"\b(Mr|Mrs|Ms|Dr|Prof|Rev|St|Ave|Ltd|Inc|Co|Corp|Imp|Exp|Jr|Sr|Mt|Ft|"
+    r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\.$",
+    re.IGNORECASE
 )
 
 
 def sentence_split(s: str) -> list[str]:
-    sentences = re.split(r"(?<=[.!?;])\s+(?![a-z])", s)
+    sentences = re.split(r"(?<=[^.][.!?;]) (?!\p{Ll})", s)
     prev = ""
     result = []
     for sentence in sentences:
-        sentence = re.split(r"pic.twitter.com/\w+", sentence)[-1]
-        sentence = sentence.strip()
-        if sentence and not re.search(r"^[^A-Za-z0-9]+$", sentence):
-            sentence = prev + sentence
-            words = sentence.split()
-            has_capitals = [word for word in words if re.search(r"[A-Z]", word)]
-            if re.search(r"^\d+\. .+? \d+\.$", sentence):
-                match = re.search(r"\d+\.$", sentence).group()
-                result.append(sentence[:-len(match) - 1])
-                prev = match + " "
-            elif re.search(r"^[^bcdfgijklmnpqrstvwxyz]+$", sentence):
+        if match := re.match(r"[^\p{L}\p{N}\"#$'(<@\[{¢£¥€₽√]+", sentence):
+            sentence = sentence[len(match.group()):]
+        sentence = prev + sentence.strip()
+        if sentence:
+            if re.search(r"\b([A-Z]|[CS]h|Y[aeou]|[GO]')\.$", sentence):
                 prev = sentence + " "
-            elif re.search(r"\b[A-Zaehou'.]+\.$", sentence):
-                prev = sentence + " "
-            elif re.search(special, sentence):
-                prev = sentence + " "
-            elif len(has_capitals) >= round(len(words) * 0.7):
+            elif re.search(special_cases, sentence):
                 prev = sentence + " "
             else:
                 result.append(sentence)
                 prev = ""
     if prev:
         if result:
-            result[-1] += " " + prev.strip()
+            result[-1] = result[-1] + " " + prev[:-1]
         else:
-            result.append(prev.strip())
+            result.append(prev[:-1])
     return result
