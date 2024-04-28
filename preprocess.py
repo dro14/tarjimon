@@ -4,10 +4,10 @@ from functions.strip_replace import strip_replace
 
 
 def preprocess(s: str) -> list[str]:
-    result = []
-    for line in s.splitlines():
-        line = strip_replace(line)
-        sentences = sentence_split(line)
-        sentences = [quote_standardization(sentence) for sentence in sentences]
-        result.extend(sentences)
-    return result
+    s = strip_replace(s)
+    sentences = []
+    for i, sentence in enumerate(sentence_split(s)):
+        sentence = quote_standardization(sentence)
+        sentence = "translate English to Uzbek: " + sentence
+        sentences.append(sentence)
+    return sentences
