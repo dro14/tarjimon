@@ -14,6 +14,7 @@ def translate(s: str) -> str:
             continue
         sentences = preprocess(line)
         for j, sentence in enumerate(sentences):
+            print(sentence)
             sentence, urls = extract_urls(sentence)
             input_ids = tokenizer.encode(
                 f"translate English to Uzbek: {sentence}",
@@ -25,6 +26,7 @@ def translate(s: str) -> str:
             translation = tokenizer.decode(outputs[0], skip_special_tokens=True)
             for url in urls:
                 translation = translation.replace("URL", url, 1)
+            print(translation)
             sentences[j] = translation
         lines[i] = " ".join(sentences)
     return "\n".join(lines)
