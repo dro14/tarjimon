@@ -7,6 +7,9 @@ def preprocess(s: str) -> list[str]:
     s = strip_replace(s)
     sentences = []
     for i, sentence in enumerate(sentence_split(s)):
+        sentence = sentence.strip()
+        if not sentence:
+            continue
         sentence = quote_standardization(sentence)
         sentence = "translate English to Uzbek: " + sentence
         sentences.append(sentence)
