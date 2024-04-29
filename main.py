@@ -150,10 +150,7 @@ def translate_endpoint():
     t_before = time.time()
     d_date, input_start = localize_date()
     # translate content
-    translated_text = "<ERROR>"
-    for translated_text in translate(client_content):
-        yield translated_text
-        pass
+    translated_text = translate(client_content)
     t_after = time.time()
     _, output_end = localize_date()
     duration = round(t_after - t_before, 2)
