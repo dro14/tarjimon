@@ -6,7 +6,7 @@ tokenizer = T5Tokenizer.from_pretrained("model")
 model = TFT5ForConditionalGeneration.from_pretrained("model")
 
 
-def translate(s: str) -> str:
+def translate(s: str) -> list[str]:
     lines = s.split("\n")
     for i, line in enumerate(lines):
         line = line.strip()
@@ -30,5 +30,4 @@ def translate(s: str) -> str:
             sentences[j] = translation
             print(sentences[j])
             j += 1
-        lines[i] = " ".join(sentences)
-    return "\n".join(lines)
+        yield " ".join(sentences) + "\n"
