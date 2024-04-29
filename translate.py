@@ -16,6 +16,7 @@ def translate(s: str) -> str:
         for j, output in enumerate(outputs):
             sentence = tokenizer.decode(output, skip_special_tokens=True)
             for url in urls[j]:
-                sentences[j] = sentence.replace("URL", url, 1)
+                sentence = sentence.replace("URL", url, 1)
+            sentences[j] = sentence
         lines[i] = " ".join(sentences)
     return "\n".join(lines)
