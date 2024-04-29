@@ -1,12 +1,11 @@
-from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from flask import Flask, render_template, request
 from sqlalchemy import String, Integer, Float
-from translate import translate
-# from google_translate import translate  # for Yusuf for local run
+from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime as dt
-from pytz import timezone
+from translate import translate
 from user_agents import parse
+from pytz import timezone
 import time
 
 # INIT APP

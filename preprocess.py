@@ -5,6 +5,7 @@ from functions.extract_urls import extract_urls
 
 
 def preprocess(s: str) -> tuple[list[str], list[list[str]]]:
+    s = s.replace("\n", " ")
     s = strip_replace(s)
     sentences, links = [], []
     for sentence in sentence_split(s):
