@@ -7,7 +7,7 @@ model = TFT5ForConditionalGeneration.from_pretrained("model")
 
 
 def translate(s: str) -> str:
-    lines = s.splitlines()
+    lines = s.split("\n")
     for i, line in enumerate(lines):
         line = line.strip()
         if not line:
