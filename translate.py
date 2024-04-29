@@ -13,8 +13,8 @@ def translate(s: str) -> str:
         sentences, urls = preprocess(line)
         inputs = tokenizer(sentences, max_length=128, padding="max_length", truncation=True)
         outputs = model.generate(inputs["input_ids"], max_length=128)
-        sentences = tokenizer.decode(outputs, skip_special_tokens=True)
-        for j, sentence in enumerate(sentences):
+        for j, output in enumerate(outputs):
+            sentence = tokenizer.decode(output, skip_special_tokens=True)
             for url in urls[j]:
                 sentences[j] = sentence.replace("URL", url, 1)
         lines[i] = " ".join(sentences)
