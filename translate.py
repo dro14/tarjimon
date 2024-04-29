@@ -22,7 +22,7 @@ def translate(s: str) -> str:
         )
         outputs = model.generate(
             model_inputs["input_ids"],
-            max_length=128,
+            max_length=64,
         )
         for j in range(len(sentences)):
             sentences[j] = tokenizer.decode(outputs[j], skip_special_tokens=True)
