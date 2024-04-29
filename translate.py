@@ -12,20 +12,19 @@ def translate(s: str) -> str:
         line = line.strip()
         if not line:
             continue
-        line, urls = extract_urls(line)
         sentences = preprocess(line)
         for j, sentence in enumerate(sentences):
+            sentence, urls = extract_urls(sentence)
             input_ids = tokenizer.encode(
                 f"translate English to Uzbek: {sentence}",
                 max_length=128,
                 padding="max_length",
                 truncation=True,
             )
-            print(input_ids)
-            outputs = model.generate(input_ids, max_length=128)
-            sentences[j] = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        line = " ".join(sentences)
-        for url in urls:
-            line = line.replace("URL", url, 1)
-        lines[i] = line
+            outputs = model.generate([input_ids], max_length=128)
+            translation = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            for url in urls:
+                translation = translation.replace("URL", url, 1)
+            sentences[j] = translation
+        lines[i] = " ".join(sentences)
     return "\n".join(lines)
