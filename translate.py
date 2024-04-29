@@ -10,14 +10,10 @@ def translate(s: str) -> str:
     for i, line in enumerate(lines):
         if not line.strip():
             continue
-        print(line)
         sentences, urls = preprocess(line)
-        print(sentences)
-        inputs = tokenizer.encode(sentences, max_length=128, padding="max_length", truncation=True)
-        print(inputs)
-        outputs = model.generate(inputs, max_length=128)
+        inputs = tokenizer(sentences, max_length=128, padding="max_length", truncation=True)
+        outputs = model.generate(inputs["input_ids"], max_length=128)
         sentences = tokenizer.decode(outputs, skip_special_tokens=True)
-        print(sentences)
         for j, sentence in enumerate(sentences):
             for url in urls[j]:
                 sentences[j] = sentence.replace("URL", url, 1)
