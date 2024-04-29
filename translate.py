@@ -13,20 +13,22 @@ def translate(s: str) -> str:
         if not line:
             continue
         sentences = preprocess(line)
-        for j, sentence in enumerate(sentences):
-            print(sentence)
+        j = 0
+        while j < len(sentences):
+            print(sentences[j])
+            sentence = sentences[j]
             sentence, urls = extract_urls(sentence)
-            input_ids = tokenizer.encode(
-                f"translate English to Uzbek: {sentence}",
-                max_length=128,
-                padding="max_length",
-                truncation=True,
-            )
-            outputs = model.generate([input_ids], max_length=128)
+            input_ids = tokenizer.encode(sentence, max_length=128, padding="max_length", truncation=True)
+            try:
+                outputs = model.generate([input_ids], max_length=128)
+            except Exception as e:
+                print(e)
+                continue
             translation = tokenizer.decode(outputs[0], skip_special_tokens=True)
             for url in urls:
                 translation = translation.replace("URL", url, 1)
-            print(translation)
             sentences[j] = translation
+            j += 1
+            print(sentences[j])
         lines[i] = " ".join(sentences)
     return "\n".join(lines)
