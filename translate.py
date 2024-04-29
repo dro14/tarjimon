@@ -9,6 +9,8 @@ model = TFT5ForConditionalGeneration.from_pretrained("model")
 def translate(s: str) -> str:
     lines = s.splitlines()
     for i, line in enumerate(lines):
+        if not line.strip():
+            continue
         line, urls = extract_urls(line)
         sentences = preprocess(line)
         inputs = tokenizer(
