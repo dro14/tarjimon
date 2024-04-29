@@ -14,18 +14,16 @@ def translate(s: str) -> str:
             continue
         line, urls = extract_urls(line)
         sentences = preprocess(line)
-        model_inputs = tokenizer(
-            sentences,
-            max_length=128,
-            padding="max_length",
-            truncation=True,
-        )
-        outputs = model.generate(
-            model_inputs["input_ids"],
-            max_length=64,
-        )
-        for j in range(len(sentences)):
-            sentences[j] = tokenizer.decode(outputs[j], skip_special_tokens=True)
+        for j, sentence in enumerate(sentences):
+            input_ids = tokenizer.encode(
+                f"translate English to Uzbek: {sentence}",
+                max_length=128,
+                padding="max_length",
+                truncation=True,
+            )
+            print(input_ids)
+            outputs = model.generate(input_ids, max_length=128)
+            sentences[j] = tokenizer.decode(outputs[0], skip_special_tokens=True)
         line = " ".join(sentences)
         for url in urls:
             line = line.replace("URL", url, 1)

@@ -11,6 +11,5 @@ def preprocess(s: str) -> list[str]:
         if not sentence:
             continue
         sentence = quote_standardization(sentence)
-        sentence = "translate English to Uzbek: " + sentence
         sentences.append(sentence)
     return sentences
