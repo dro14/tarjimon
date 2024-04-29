@@ -12,6 +12,7 @@ def translate(s: str) -> str:
             continue
         sentences, urls = preprocess(line)
         inputs = tokenizer.encode(sentences, max_length=128, padding="max_length", truncation=True)
+        print(inputs)
         outputs = model.generate(inputs, max_length=128)
         sentences = tokenizer.decode(outputs, skip_special_tokens=True)
         for j, sentence in enumerate(sentences):
