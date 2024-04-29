@@ -28,7 +28,7 @@ def translate(s: str) -> str:
             for url in urls:
                 translation = translation.replace("URL", url, 1)
             sentences[j] = translation
-            j += 1
             print(sentences[j])
+            j += 1
         lines[i] = " ".join(sentences)
     return "\n".join(lines)
