@@ -6,10 +6,7 @@ from functions.strip_replace import strip_replace
 def preprocess(s: str) -> list[str]:
     s = strip_replace(s)
     sentences = []
-    for i, sentence in enumerate(sentence_split(s)):
-        sentence = sentence.strip()
-        if not sentence:
-            continue
+    for sentence in sentence_split(s):
         sentence = quote_standardization(sentence)
         sentence = "translate English to Uzbek: " + sentence
         sentences.append(sentence)

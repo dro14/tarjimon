@@ -9,26 +9,17 @@ model = TFT5ForConditionalGeneration.from_pretrained("model")
 def translate(s: str) -> str:
     lines = s.split("\n")
     for i, line in enumerate(lines):
-        line = line.strip()
-        if not line:
+        if not line.strip():
             continue
         sentences = preprocess(line)
-        j = 0
-        while j < len(sentences):
-            print(sentences[j])
-            sentence = sentences[j]
+        for j, sentence in enumerate(sentences):
             sentence, urls = extract_urls(sentence)
             input_ids = tokenizer.encode(sentence, max_length=128, padding="max_length", truncation=True)
-            try:
-                outputs = model.generate([input_ids], max_length=128)
-            except Exception as e:
-                print(e)
-                continue
-            translation = tokenizer.decode(outputs[0], skip_special_tokens=True)
+            outputs = model.generate([input_ids], max_length=128)
+            sentence = tokenizer.decode(outputs[0], skip_special_tokens=True)
             for url in urls:
-                translation = translation.replace("URL", url, 1)
-            sentences[j] = translation
-            print(sentences[j])
+                sentence = sentence.replace("URL", url, 1)
+            sentences[j] = sentence
             j += 1
         lines[i] = " ".join(sentences)
     return "\n".join(lines)
