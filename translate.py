@@ -16,14 +16,14 @@ def translate(text: str) -> str:
     parts = []
     start = 0
     while start < len(tokens):
-        end = min(start + 127, len(tokens) - 1)
+        end = min(start + 63, len(tokens) - 1)
         while True:
             if any(char in tokens[end] for char in ".?!"):
                 part = tokenizer.convert_tokens_to_string(tokens[start:end + 1])
                 parts.append(part)
                 break
             elif start == end:
-                end = min(start + 127, len(tokens) - 1)
+                end = min(start + 63, len(tokens) - 1)
                 part = tokenizer.convert_tokens_to_string(tokens[start:end + 1])
                 parts.append(part)
                 break
