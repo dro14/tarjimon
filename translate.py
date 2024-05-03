@@ -2,10 +2,10 @@ from functions.quote_standardization import quote_standardization
 from functions.strip_replace import strip_replace
 from functions.extract_urls import extract_urls
 from huggingface_hub import InferenceClient
-from transformers import AutoTokenizer
+from transformers import T5Tokenizer
 import os
 
-tokenizer = AutoTokenizer.from_pretrained("dro14/tarjimon")
+tokenizer = T5Tokenizer.from_pretrained("dro14/tarjimon")
 client = InferenceClient(model="dro14/tarjimon", token=os.environ["HF_TOKEN"])
 
 
