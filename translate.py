@@ -1,17 +1,15 @@
-from transformers import T5Tokenizer, TFT5ForConditionalGeneration
+from huggingface_hub import InferenceClient
 from preprocess import preprocess
+import os
 
-tokenizer = T5Tokenizer.from_pretrained("model")
-model = TFT5ForConditionalGeneration.from_pretrained("model")
+client = InferenceClient(model="dro14/tarjimon", token=os.environ["HF_TOKEN"])
 
 
 def translate(s: str) -> str:
     sentences, urls = preprocess(s)
-    inputs = tokenizer(sentences, max_length=128, padding="max_length", truncation=True)
-    outputs = model.generate(inputs["input_ids"], max_length=128)
-    for j, output in enumerate(outputs):
-        sentence = tokenizer.decode(output, skip_special_tokens=True)
-        for url in urls[j]:
+    for i, sentence in enumerate(sentences):
+        sentence = client.text_generation(sentence, max_new_tokens=128)
+        for url in urls[i]:
             sentence = sentence.replace("URL", url, 1)
-        sentences[j] = sentence
+        sentences[i] = sentence
     return " ".join(sentences)
