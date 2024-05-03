@@ -8,7 +8,7 @@ client = InferenceClient(model="dro14/tarjimon", token=os.environ["HF_TOKEN"])
 def translate(s: str) -> str:
     sentences, urls = preprocess(s)
     for i, sentence in enumerate(sentences):
-        sentence = client.text_generation(sentence, max_new_tokens=128)
+        sentence = client.text_generation(sentence, max_new_tokens=64)
         for url in urls[i]:
             sentence = sentence.replace("URL", url, 1)
         sentences[i] = sentence
