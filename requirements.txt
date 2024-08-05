@@ -7,6 +7,7 @@ regex
 sentencepiece
 SQLAlchemy
 tensorflow==2.15.1
+tf-keras
 transformers
 urlextract
 user-agents
