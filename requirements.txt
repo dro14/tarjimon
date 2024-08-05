@@ -6,8 +6,6 @@ pytz
 regex
 sentencepiece
 SQLAlchemy
-tensorflow
-tf-keras
 transformers
 urlextract
 user-agents
