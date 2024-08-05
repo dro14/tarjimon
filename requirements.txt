@@ -1,6 +1,7 @@
 emoji
 Flask
 Flask-SQLAlchemy
+gunicorn
 pytz
 regex
 sentencepiece
