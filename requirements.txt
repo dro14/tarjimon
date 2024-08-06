@@ -6,7 +6,7 @@ pytz
 regex
 sentencepiece
 SQLAlchemy
-tensorflow[and-cuda]==2.15.1
+tensorflow==2.15.1
 tf-keras
 transformers
 urlextract
